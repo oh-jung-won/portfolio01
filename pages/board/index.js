@@ -1,11 +1,93 @@
-import {MainBox, MainName, TextBox, TextName ,TextWrapper, TextWrapperIn, TitleWrapper, TitleBox, ContextWrapper, ContentBox} from '../../styles/boardStyled'
-import {AddressWrapper, AddressWrapperIn, AddressDisplay, AddressButton, Address1, Address2, YoutubeWrapper, YoutubeBox} from '../../styles/boardStyled'
-import {PictureWrapper, PictureWrapperIn, PictureWrapperBox, PictureWrapperBoxPlus, PictureWrapperBoxText} from '../../styles/boardStyled'
-import {MainSettingWrapper, MainSettingWrapperIn, MainSettingWrapperInIn, MainSettingRadio, MainSettingRadioText, RegButtonWrapper, RegButton} from '../../styles/boardStyled'
-
+import { useState } from 'react'
+import {MainBox, 
+    MainName, 
+    TextBox, 
+    TextName, 
+    TextWrapper, 
+    TextWrapperIn, 
+    TitleWrapper, 
+    TitleBox, 
+    ContextWrapper, 
+    ContentBox, 
+    AddressWrapper, 
+    AddressWrapperIn, 
+    AddressDisplay, 
+    AddressButton, 
+    Address1, 
+    Address2, 
+    YoutubeWrapper, 
+    YoutubeBox, 
+    PictureWrapper, 
+    PictureWrapperIn, 
+    PictureWrapperBox, 
+    PictureWrapperBoxPlus, 
+    PictureWrapperBoxText, 
+    MainSettingWrapper, 
+    MainSettingWrapperIn, 
+    MainSettingWrapperInIn, 
+    MainSettingRadio, 
+    MainSettingRadioText, 
+    RegButtonWrapper, 
+    RegButton, 
+    Error} from '../../styles/boardStyled'
 
 export default function BoardPage() {
+    const [writer, setWriter] = useState("")
+    const [password, setPassword] = useState("")
+    const [title, setTitle] = useState("")
+    const [content, setContent] = useState("")
 
+    const [writerErr, setWriterErr] = useState("")
+    const [passwordErr, setPasswordErr] = useState("")
+    const [titleErr, setTitleErr] = useState("")
+    const [contentErr, setContentErr] = useState("")
+
+    function onChangeWriter(event){
+        setWriter(event.target.value)
+        if(event.target.value !== ""){
+            setWriterErr("")
+        }
+    }
+
+    function onChangePassword(event){
+        setPassword(event.target.value)
+        if(event.target.value !== ""){
+            setPasswordErr("")
+        }
+    }
+
+    function onChangeTitle(event){
+        setTitle(event.target.value)
+        if(event.target.value !== ""){
+            setTitleErr("")
+        }
+    }
+
+    function onChangeContent(event){
+        setContent(event.target.value)
+        if(event.target.value !== ""){
+            setContentErr("")
+        }
+    }
+
+    function onClickSubmit(){
+        if(!writer){
+            setWriterErr("이름을 입력해주세요")
+        }
+        if(!password){
+            setPasswordErr("비밀번호를 입력해주세요")
+        }
+        if(!title){
+            setTitleErr("제목을 입력해주세요")
+        }
+        if(!content){
+            setContentErr("내용을 입력해주세요")
+        }
+        if (writer && password && title && content) {
+            alert("게시글이 등록되었습니다.");
+        }
+
+    }
 
     return (
         <MainBox>
@@ -13,21 +95,24 @@ export default function BoardPage() {
             <TextWrapper>
                 <TextWrapperIn>
                     <TextName>작성자</TextName>
-                    <TextBox placeholder='이름을 적어주세요.'></TextBox>
+                    <TextBox placeholder='이름을 입력해주세요.' onChange={onChangeWriter}></TextBox>
+                    <Error>{writerErr}</Error>
                 </TextWrapperIn>
                 <TextWrapperIn>
                     <TextName>비밀번호</TextName>
-                    <TextBox placeholder='비밀번호를 입력해주세요.'></TextBox>
+                    <TextBox type='password' placeholder='비밀번호를 입력해주세요.' onChange={onChangePassword}></TextBox>
+                    <Error>{passwordErr}</Error>
                 </TextWrapperIn>
             </TextWrapper>
-            
             <TitleWrapper>
                 <TextName>제목</TextName>
-                <TitleBox placeholder='제목을 작성해주세요.'></TitleBox>
+                <TitleBox placeholder='제목을 입력해주세요.' onChange={onChangeTitle}></TitleBox>
+                <Error>{titleErr}</Error>
             </TitleWrapper>
             <ContextWrapper>
                 <TextName>내용</TextName>
-                <ContentBox placeholder='내용을 작성해주세요'></ContentBox>
+                <ContentBox placeholder='내용을 입력해주세요' onChange={onChangeContent}></ContentBox>
+                <Error>{contentErr}</Error>
             </ContextWrapper>
             <AddressWrapper>
                 <TextName>주소</TextName>
@@ -73,7 +158,7 @@ export default function BoardPage() {
                 </MainSettingWrapperIn>
             </MainSettingWrapper>
             <RegButtonWrapper>
-                <RegButton>등록하기</RegButton>
+                <RegButton onClick={onClickSubmit}>등록하기</RegButton>
             </RegButtonWrapper>
         </MainBox>        
     )
