@@ -225,14 +225,30 @@ align-items: center;
 export const RegButton = styled.button`
 width: 179px;
 height: 52px;
-background-color: #FFD600;
+/* background-color: #FFD600;
 
 font-weight: 900;
 font-size: 16px;
 line-height: 52px;
 text-align: center;
 border:none;
+cursor: pointer; */
+
+background: #FFFFFF;
+border: 1px solid #BDBDBD;
+
+font-family: 'Noto Sans CJK KR';
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 52px;
+text-align: center;
 cursor: pointer;
+
+:hover {
+    background-color: gold;
+    border-color: white;
+  }
 `
 export const Error = styled.div`
     text-align: 30px;

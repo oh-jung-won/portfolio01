@@ -29,9 +29,25 @@ import {MainBox,
     MainSettingRadioText, 
     RegButtonWrapper, 
     RegButton, 
-    Error} from '../../styles/boardStyled'
+    Error} from '../../../styles/boardnewStyled'
+import { gql, useMutation } from '@apollo/client'
+import { useRouter } from 'next/router'
+
+const CREATE_BOARD = gql`
+mutation createBoard($createBoardInput: CreateBoardInput!) {
+    createBoard(
+        createBoardInput: $createBoardInput
+    ){
+        _id
+        writer
+        title
+        contents
+    }
+}
+`
 
 export default function BoardPage() {
+    
     const [writer, setWriter] = useState("")
     const [password, setPassword] = useState("")
     const [title, setTitle] = useState("")
@@ -41,6 +57,9 @@ export default function BoardPage() {
     const [passwordErr, setPasswordErr] = useState("")
     const [titleErr, setTitleErr] = useState("")
     const [contentErr, setContentErr] = useState("")
+
+    const [createBoard] = useMutation(CREATE_BOARD)
+    const router = useRouter()
 
     function onChangeWriter(event){
         setWriter(event.target.value)
@@ -70,7 +89,8 @@ export default function BoardPage() {
         }
     }
 
-    function onClickSubmit(){
+    const onClickSubmit = async () => {
+
         if(!writer){
             setWriterErr("이름을 입력해주세요")
         }
@@ -84,7 +104,18 @@ export default function BoardPage() {
             setContentErr("내용을 입력해주세요")
         }
         if (writer && password && title && content) {
-            alert("게시글이 등록되었습니다.");
+            const GqlCreateBoard = createBoard ({
+                variables: {
+                    createBoardInput: {
+                        writer: writer,
+                        password: password,
+                        title: title,
+                        contents: content
+                    }
+                }
+            })
+            // alert("게시글이 등록되었습니다.");
+            router.push(`/boards/boardId/${(await GqlCreateBoard).data.createBoard._id}`)
         }
 
     }
@@ -131,15 +162,15 @@ export default function BoardPage() {
                 <TextName>사진 첨부</TextName>
                 <PictureWrapperIn>
                     <PictureWrapperBox>
-                        <PictureWrapperBoxPlus src='Vector.png'></PictureWrapperBoxPlus>
+                        <PictureWrapperBoxPlus src='../Vector.png'></PictureWrapperBoxPlus>
                         <PictureWrapperBoxText>Upload</PictureWrapperBoxText>
                     </PictureWrapperBox>
                     <PictureWrapperBox>
-                        <PictureWrapperBoxPlus src='Vector.png'></PictureWrapperBoxPlus>
+                        <PictureWrapperBoxPlus src='../Vector.png'></PictureWrapperBoxPlus>
                         <PictureWrapperBoxText>Upload</PictureWrapperBoxText>
                     </PictureWrapperBox>
                     <PictureWrapperBox>
-                        <PictureWrapperBoxPlus src='Vector.png'></PictureWrapperBoxPlus>
+                        <PictureWrapperBoxPlus src='../Vector.png'></PictureWrapperBoxPlus>
                         <PictureWrapperBoxText>Upload</PictureWrapperBoxText>
                     </PictureWrapperBox>
                 </PictureWrapperIn>
