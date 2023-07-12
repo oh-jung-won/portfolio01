@@ -1,3 +1,4 @@
+import { getDate } from '../../../../commons/libraries/utils'
 import * as S from './BoardDetail.styles'
 
 export default function BoardDetailPageUI(props){
@@ -9,7 +10,7 @@ export default function BoardDetailPageUI(props){
                     <S.WriterImg src='../../writerImg.png'></S.WriterImg>
                     <S.WriterWrapper>
                         <S.Writer>{props.data?.fetchBoard?.writer}</S.Writer>
-                        <S.WriteDate>{`Date : ${props.data?.fetchBoard?.updatedAt.substr(0, 4)}.${props.data?.fetchBoard?.updatedAt.substr(5, 2)}.${props.data?.fetchBoard?.updatedAt.substr(8, 2)}`}</S.WriteDate>
+                        <S.WriteDate>{`Date : ${getDate(props.data?.fetchBoard?.updatedAt)}`}</S.WriteDate>
                     </S.WriterWrapper>
                     <S.ClipImg src= '../../clipImg.png'></S.ClipImg>
                     <S.LocationImgWrapper>
@@ -34,7 +35,7 @@ export default function BoardDetailPageUI(props){
             <S.ButtonWrapper>
                 <S.ButtonStyle>목록으로</S.ButtonStyle>
                 <S.ButtonStyle>수정하기</S.ButtonStyle>
-                <S.ButtonStyle>삭제하기</S.ButtonStyle>
+                <S.ButtonStyle id={props.data?.fetchBoard?._id} onClick={props.onClickDelete}>삭제하기</S.ButtonStyle>
             </S.ButtonWrapper>
             <S.GrayLine></S.GrayLine>
         </S.MainWrapper>
