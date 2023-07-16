@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { useMutation } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
-import {CREATE_BOARD} from './BoardWrite.queries'
+import {CREATE_BOARD, UPDATE_BOARD} from './BoardWrite.queries'
+import {FETCH_BOARD} from '../detail/BoardDetail.queries'
 import BoardWritePageUI from './BoardWrite.presenter'
 
-export default function BoardWritePageCon() {
+export default function BoardWritePageCon(props) {
     
     const [writer, setWriter] = useState("")
     const [password, setPassword] = useState("")
@@ -17,7 +18,14 @@ export default function BoardWritePageCon() {
     const [contentsErr, setContentsErr] = useState("")
 
     const [createBoard] = useMutation(CREATE_BOARD)
+    const [updateBoard] = useMutation(UPDATE_BOARD)
     const router = useRouter()
+
+    const {data} = useQuery(FETCH_BOARD, {
+        variables: {
+            boardId: router.query.id
+        }
+    })
 
     function onChangeWriter(event){
         setWriter(event.target.value)
@@ -45,7 +53,6 @@ export default function BoardWritePageCon() {
         if(event.target.value !== ""){
             setContentsErr("")
         }
-        console.log(contents)
     }
 
     const onClickSubmit = async () => {
@@ -73,9 +80,36 @@ export default function BoardWritePageCon() {
                     }
                 }
             })
-            router.push(`/boards/boardId/${(await GqlCreateBoard).data.createBoard._id}`)
+            router.push(`/boards/${(await GqlCreateBoard).data.createBoard._id}`)
         }
 
+    }
+
+    const onClickUpdate = async () => {
+        if(!password){
+            setPasswordErr("비밀번호를 입력해주세요")
+        }
+        if(!title){
+            setTitleErr("제목을 입력해주세요")
+        }
+        if(!contents){
+            setContentsErr("내용을 입력해주세요")
+        }
+
+        if(!password||!title||!contents) return
+        
+        const myVariables = {}
+        if (title) myVariables.title = title
+        if (contents) myVariables.contents = contents
+
+        const GqlUpdateBoard = updateBoard({
+            variables: {updateBoardInput: myVariables,
+                        password: password,
+                        boardId: router.query.id
+            }
+        })
+
+        router.push(`/boards/${(await GqlUpdateBoard).data.updateBoard._id}`)
     }
 
     return (
@@ -85,9 +119,12 @@ export default function BoardWritePageCon() {
             onChangeTitle={onChangeTitle}
             onChangeContents={onChangeContents}
             onClickSubmit={onClickSubmit}
+            onClickUpdate={onClickUpdate}
             writerErr={writerErr}
             passwordErr={passwordErr}
             titleErr={titleErr}
-            contentsErr={contentsErr} />
+            contentsErr={contentsErr}
+            isEdit={props.isEdit} 
+            data={data}/>
     )
 }

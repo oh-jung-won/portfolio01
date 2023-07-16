@@ -4,11 +4,11 @@ export default function BoardWritePageUI(props) {
 
     return (
         <S.MainBox>
-            <S.MainName>게시물 등록</S.MainName>
+            <S.MainName>{props.isEdit ? "게시물 수정" : "게시물 등록"}</S.MainName>
             <S.TextWrapper>
                 <S.TextWrapperIn>
                     <S.TextName>작성자</S.TextName>
-                    <S.TextBox placeholder='이름을 입력해주세요.' onChange={props.onChangeWriter}></S.TextBox>
+                    <S.TextBox placeholder='이름을 입력해주세요.' onChange={props.onChangeWriter} defaultValue={props.data?.fetchBoard.writer} readOnly={props.isEdit ? true : false}></S.TextBox>
                     <S.Error>{props.writerErr}</S.Error>
                 </S.TextWrapperIn>
                 <S.TextWrapperIn>
@@ -19,12 +19,12 @@ export default function BoardWritePageUI(props) {
             </S.TextWrapper>
             <S.TitleWrapper>
                 <S.TextName>제목</S.TextName>
-                <S.TitleBox placeholder='제목을 입력해주세요.' onChange={props.onChangeTitle}></S.TitleBox>
+                <S.TitleBox placeholder='제목을 입력해주세요.' onChange={props.onChangeTitle} defaultValue={props.data?.fetchBoard.title}></S.TitleBox>
               <S.Error>{props.titleErr}</S.Error>
             </S.TitleWrapper>
             <S.ContextWrapper>
                 <S.TextName>내용</S.TextName>
-                <S.ContentBox placeholder='내용을 입력해주세요' onChange={props.onChangeContents}></S.ContentBox>
+                <S.ContentBox placeholder='내용을 입력해주세요' onChange={props.onChangeContents} defaultValue={props.data?.fetchBoard.contents}></S.ContentBox>
                 <S.Error>{props.contentsErr}</S.Error>
             </S.ContextWrapper>
             <S.AddressWrapper>
@@ -71,7 +71,7 @@ export default function BoardWritePageUI(props) {
                 </S.MainSettingWrapperIn>
             </S.MainSettingWrapper>
             <S.SubmitButtonWrapper>
-                <S.SubmitButton onClick={props.onClickSubmit}>등록하기</S.SubmitButton>
+                <S.SubmitButton onClick={props.isEdit ? props.onClickUpdate : props.onClickSubmit}>{props.isEdit ? "수정하기" : "등록하기"}</S.SubmitButton>
             </S.SubmitButtonWrapper>
         </S.MainBox>        
     )

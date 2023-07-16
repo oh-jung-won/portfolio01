@@ -24,7 +24,7 @@ export default function BoardListUI(props){
             <S.Footer>
                 <S.CreateButtonWrapper>
                     <S.CreateButtonImg src='../../createButtonImg.png'></S.CreateButtonImg>
-                    <S.CreateButtonText>게시물 등록하기</S.CreateButtonText>
+                    <S.CreateButtonText onClick={props.onClickMoveToBoardNew}>게시물 등록하기</S.CreateButtonText>
                 </S.CreateButtonWrapper>
             </S.Footer>
         </S.MainWrapper>

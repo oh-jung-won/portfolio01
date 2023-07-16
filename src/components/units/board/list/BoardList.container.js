@@ -4,20 +4,23 @@ import {FETCH_BOARDS} from './BoardList.queries'
 import { useQuery } from "@apollo/client"
 
 export default function BoardListPageCon(){
-    const { data } = useQuery(FETCH_BOARDS, {
-        variables: { page: 15 }
-      })
-
+    const { data } = useQuery(FETCH_BOARDS)
+    
     const router = useRouter()
 
     const onClickMoveToBoardDetail = (event) => {
-        router.push(`/boards/boardId/${event.target.id}`)
+        router.push(`/boards/${event.target.id}`)
         console.log(event.target.id)
+    }
+
+    const onClickMoveToBoardNew = () => {
+        router.push(`/boards/new`)
     }
 
     return (
         <BoardListUI 
         data = {data}
-        onClickMoveToBoardDetail={onClickMoveToBoardDetail}/>
+        onClickMoveToBoardDetail={onClickMoveToBoardDetail}
+        onClickMoveToBoardNew={onClickMoveToBoardNew}/>
     )
 }

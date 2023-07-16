@@ -22,10 +22,20 @@ export default function BoardDetailPageCon(){
         router.push('/boards')
     }
 
+    const onClickEdit = () => {
+        router.push(`/boards/${router.query.id}/edit`)
+    }
+
+    const onClickList = () => {
+        router.push(`/boards`)
+    }
+
     return(
         <BoardDetailPageUI 
             data={data} 
-            onClickDelete={onClickDelete}/>
+            onClickDelete={onClickDelete}
+            onClickEdit={onClickEdit}
+            onClickList={onClickList}/>
     )
 
 }
