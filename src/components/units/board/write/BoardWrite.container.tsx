@@ -2,10 +2,14 @@ import { useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
 import {CREATE_BOARD, UPDATE_BOARD} from './BoardWrite.queries'
-import {FETCH_BOARD} from '../detail/BoardDetail.queries'
+// import {FETCH_BOARD} from '../detail/BoardDetail.queries'
 import BoardWritePageUI from './BoardWrite.presenter'
+import { IBoardWritePageConProps, IMyVariables } from './BoardWrite.types'
+import { ChangeEvent } from 'react'
+import { IMutation, IMutationCreateBoardArgs, IMutationUpdateBoardArgs, IQuery, IQueryFetchBoardArgs } from '../../../../commons/types/generated/types'
 
-export default function BoardWritePageCon(props) {
+
+export default function BoardWritePageCon(props: IBoardWritePageConProps) {
     
     const [writer, setWriter] = useState("")
     const [password, setPassword] = useState("")
@@ -17,38 +21,38 @@ export default function BoardWritePageCon(props) {
     const [titleErr, setTitleErr] = useState("")
     const [contentsErr, setContentsErr] = useState("")
 
-    const [createBoard] = useMutation(CREATE_BOARD)
-    const [updateBoard] = useMutation(UPDATE_BOARD)
+    const [createBoard] = useMutation<Pick<IMutation, 'createBoard'>, IMutationCreateBoardArgs>(CREATE_BOARD)
+    const [updateBoard] = useMutation<Pick<IMutation, 'updateBoard'>, IMutationUpdateBoardArgs>(UPDATE_BOARD)
     const router = useRouter()
 
-    const {data} = useQuery(FETCH_BOARD, {
-        variables: {
-            boardId: router.query.id
-        }
-    })
+    // const {data} = useQuery<Pick<IQuery, 'fetchBoard'>, IQueryFetchBoardArgs>(FETCH_BOARD, {
+    //     variables: {
+    //         boardId: router.query.id 
+    //     }
+    // })
 
-    function onChangeWriter(event){
+    function onChangeWriter(event: ChangeEvent<HTMLInputElement>){
         setWriter(event.target.value)
         if(event.target.value !== ""){
             setWriterErr("")
         }
     }
 
-    function onChangePassword(event){
+    function onChangePassword(event: ChangeEvent<HTMLInputElement>){
         setPassword(event.target.value)
         if(event.target.value !== ""){
             setPasswordErr("")
         }
     }
 
-    function onChangeTitle(event){
+    function onChangeTitle(event: ChangeEvent<HTMLInputElement>){
         setTitle(event.target.value)
         if(event.target.value !== ""){
             setTitleErr("")
         }
     }
 
-    function onChangeContents(event){
+    function onChangeContents(event: ChangeEvent<HTMLTextAreaElement>){
         setContents(event.target.value)
         if(event.target.value !== ""){
             setContentsErr("")
@@ -70,17 +74,21 @@ export default function BoardWritePageCon(props) {
             setContentsErr("내용을 입력해주세요")
         }
         if (writer && password && title && contents) {
-            const GqlCreateBoard = createBoard ({
-                variables: {
-                    createBoardInput: {
-                        writer: writer,
-                        password: password,
-                        title: title,
-                        contents: contents
+            try {
+                const result = await createBoard ({
+                    variables: {
+                        createBoardInput: {
+                            writer: writer,
+                            password: password,
+                            title: title,
+                            contents: contents
+                        }
                     }
-                }
-            })
-            router.push(`/boards/${(await GqlCreateBoard).data.createBoard._id}`)
+                })
+                router.push(`/boards/${result.data?.createBoard._id}`) 
+            } catch (error) {
+                if(error instanceof Error) alert(error.message)
+            }
         }
 
     }
@@ -98,18 +106,27 @@ export default function BoardWritePageCon(props) {
 
         if(!password||!title||!contents) return
         
-        const myVariables = {}
+        const myVariables: IMyVariables = {}
         if (title) myVariables.title = title
         if (contents) myVariables.contents = contents
 
-        const GqlUpdateBoard = updateBoard({
-            variables: {updateBoardInput: myVariables,
-                        password: password,
-                        boardId: router.query.id
+        try {
+            if(typeof router.query.id !== "string"){
+                alert("시스템에 문제가 있습니다")
+                return
             }
-        })
+            const result = await updateBoard({
+                variables: {updateBoardInput: myVariables,
+                            password: password,
+                            boardId: router.query.id
+                }
+            })
+            router.push(`/boards/${result.data?.updateBoard._id}`)
+            
+        } catch (error) {
+            if(error instanceof Error) alert(error.message)
+        }
 
-        router.push(`/boards/${(await GqlUpdateBoard).data.updateBoard._id}`)
     }
 
     return (
@@ -125,6 +142,6 @@ export default function BoardWritePageCon(props) {
             titleErr={titleErr}
             contentsErr={contentsErr}
             isEdit={props.isEdit} 
-            data={data}/>
+            data={props.data}/>
     )
 }

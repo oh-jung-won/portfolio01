@@ -1,7 +1,8 @@
 import { getDate } from '../../../../commons/libraries/utils'
 import * as S from './BoardComment.styles'
+import { IBoardCommentPageUIProps } from './BoardComment.types'
 
-export default function BoardCommentPageUI(props) {
+export default function BoardCommentPageUI(props: IBoardCommentPageUIProps) {
     return(
         <>
             <S.HeadWrapper>
@@ -16,7 +17,7 @@ export default function BoardCommentPageUI(props) {
                 <S.Star src='../../commentStarImg.png'></S.Star>
             </S.StarWrapper>
             <S.CreateTextWrapper>
-                <S.Text value={props.commentDefaultValue} onChange={props.onChangeComment} placeholder='개인정보를 공유 및 요청하거나, 명예 훼손, 무단 광고, 불법 정보 유포시 모니터링후 삭제될 수 있으며, 이에 대한 민형사상 책임은 게시자에게 있습니다.' type='textarea'></S.Text>
+                <S.Text value={props.commentDefaultValue} onChange={props.onChangeComment} placeholder='개인정보를 공유 및 요청하거나, 명예 훼손, 무단 광고, 불법 정보 유포시 모니터링후 삭제될 수 있으며, 이에 대한 민형사상 책임은 게시자에게 있습니다.'></S.Text>
                 <S.TextFooterWrapper>
                     <S.TextCount>{props.commentLength}/100</S.TextCount>
                     <S.Submit onClick={props.onclickCommentCreate}>등록하기</S.Submit>

@@ -1,7 +1,8 @@
 import { getDate } from '../../../../commons/libraries/utils'
 import * as S from './BoardDetail.styles'
+import { IBoardDetailPageUIProps } from './BoardDetail.types'
 
-export default function BoardDetailPageUI(props){
+export default function BoardDetailPageUI(props: IBoardDetailPageUIProps){
 
     return(
         <S.MainWrapper>

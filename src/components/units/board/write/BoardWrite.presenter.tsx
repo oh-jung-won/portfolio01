@@ -1,6 +1,7 @@
 import * as S from "./BoardWrite.styles"
+import { IBoardWritePageUIProps } from "./BoardWrite.types"
 
-export default function BoardWritePageUI(props) {
+export default function BoardWritePageUI(props: IBoardWritePageUIProps) {
 
     return (
         <S.MainBox>
@@ -8,7 +9,7 @@ export default function BoardWritePageUI(props) {
             <S.TextWrapper>
                 <S.TextWrapperIn>
                     <S.TextName>작성자</S.TextName>
-                    <S.TextBox placeholder='이름을 입력해주세요.' onChange={props.onChangeWriter} defaultValue={props.data?.fetchBoard.writer} readOnly={props.isEdit ? true : false}></S.TextBox>
+                    <S.TextBox placeholder='이름을 입력해주세요.' onChange={props.onChangeWriter} defaultValue={props.data?.fetchBoard.writer ?? ""} readOnly={props.isEdit ? true : false}></S.TextBox>
                     <S.Error>{props.writerErr}</S.Error>
                 </S.TextWrapperIn>
                 <S.TextWrapperIn>
@@ -27,7 +28,7 @@ export default function BoardWritePageUI(props) {
                 <S.ContentBox placeholder='내용을 입력해주세요' onChange={props.onChangeContents} defaultValue={props.data?.fetchBoard.contents}></S.ContentBox>
                 <S.Error>{props.contentsErr}</S.Error>
             </S.ContextWrapper>
-            <S.AddressWrapper>
+            <S.AddressWrapper>e
                 <S.TextName>주소</S.TextName>
                 <S.AddressWrapperIn>
                     <S.AddressDisplay placeholder='07250'></S.AddressDisplay>
